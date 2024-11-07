@@ -5,39 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wer ist es? - Multiplayer</title>
   
-<script type="module">
-  // Importiere Firebase direkt im Modul
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+  <!-- Firebase App und Datenbank importieren -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-  // Firebase-Konfiguration
-  require('dotenv').config();  // Lädt die .env-Datei
-
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: "weristes-716d0.firebaseapp.com",
-  databaseURL: "https://weristes-716d0-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "weristes-716d0",
-  storageBucket: "weristes-716d0.firebasestorage.app",
-  messagingSenderId: "1095166518480",
-  appId: "1:1095166518480:web:0915be52f9d650c6f52ad5"
-};
-
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-
-  // Funktionen exportieren, wenn du sie in anderen Dateien nutzen willst
-  window.database = database;
-  window.ref = ref;
-  window.set = set;
-  window.onValue = onValue;
-</script>
-
-
-  <script>
-    // Your Firebase configuration
+    // Firebase-Konfiguration aus .env laden
     const firebaseConfig = {
       apiKey: "AIzaSyBCVq6-A3-iyvyHTAETeHqx-lHRWHg_Cho",
       authDomain: "weristes-716d0.firebaseapp.com",
@@ -48,8 +21,15 @@ const firebaseConfig = {
       appId: "1:1095166518480:web:0915be52f9d650c6f52ad5"
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    // Firebase initialisieren
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Firebase-Methoden als globale Variablen setzen, damit sie auch in script.js genutzt werden können
+    window.database = database;
+    window.ref = ref;
+    window.set = set;
+    window.onValue = onValue;
   </script>
 
   <link rel="stylesheet" href="style.css">
