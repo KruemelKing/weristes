@@ -1,8 +1,5 @@
-// Firebase-Konfiguration
-const firebaseConfig = {
-  // Füge hier deine Firebase-Daten ein
-};
-firebase.initializeApp(firebaseConfig);
+// `script.js` – ohne erneute Initialisierung von Firebase
+
 const database = firebase.database();
 
 let gameId = null;
