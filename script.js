@@ -1,10 +1,6 @@
-// `script.js` - Keine Firebase-Initialisierung mehr notwendig
-
 // Zugriff auf die Firebase-Datenbank, die von der index.html-Datei übergeben wurde
 const database = window.database;  // Firebase-Datenbank aus der index.html
-const ref = window.ref;
-const set = window.set;
-const onValue = window.onValue;
+const { ref, set, onValue } = window;  // Hole die richtigen Methoden aus window
 
 let gameId = null;
 
@@ -12,10 +8,16 @@ let gameId = null;
 function createGame() {
   console.log("Neues Spiel wird erstellt...");  // Testausgabe
   gameId = Math.random().toString(36).substr(2, 5);  // Zufälliger Spielcode
-  set(ref(database, 'games/' + gameId), {
+
+  // Ref für den neuen Spielstandort erstellen
+  const gameRef = ref(database, 'games/' + gameId);
+
+  // Spiel in der Datenbank speichern
+  set(gameRef, {
     players: 1,
     board: initializeBoard()  // Board mit initialen Werten
   });
+  
   loadGame();
   alert(`Dein Spielcode ist: ${gameId}`);
 }
@@ -27,10 +29,11 @@ function initializeBoard() {
 
 // Karte umklappen
 function flipCard(index) {
-  ref(database, `games/${gameId}/board/${index}`).get().then((snapshot) => {
+  const cardRef = ref(database, `games/${gameId}/board/${index}`);
+  get(cardRef).then((snapshot) => {
     const currentState = snapshot.val();
     const newState = currentState === "flipped" ? "hidden" : "flipped";
-    set(ref(database, `games/${gameId}/board/${index}`), newState);
+    set(cardRef, newState);
   });
 }
 
@@ -44,7 +47,8 @@ function leaveGame() {
 // Spiel beitreten
 function joinGame() {
   gameId = document.getElementById("joinCode").value;
-  ref(database, 'games/' + gameId).once('value').then(snapshot => {
+  const gameRef = ref(database, 'games/' + gameId);
+  get(gameRef).then(snapshot => {
     if (snapshot.exists()) {
       set(ref(database, 'games/' + gameId + '/players'), 2);
       loadGame();
@@ -60,7 +64,8 @@ function loadGame() {
   document.getElementById("game").style.display = "block";
   const boardDiv = document.getElementById('board');
 
-  onValue(ref(database, 'games/' + gameId + '/board'), (snapshot) => {
+  const boardRef = ref(database, 'games/' + gameId + '/board');
+  onValue(boardRef, (snapshot) => {
     const board = snapshot.val();
     boardDiv.innerHTML = '';  // Löscht das Board und aktualisiert es
 
