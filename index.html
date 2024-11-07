@@ -5,11 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wer ist es? - Multiplayer</title>
   
-  <!-- Firebase App (the core Firebase SDK) -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  
-  <!-- Firebase Realtime Database -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+<script type="module">
+  // Importiere Firebase direkt im Modul
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+  // Firebase-Konfiguration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBCVq6-A3-iyvyHTAETeHqx-lHRWHg_Cho",
+    authDomain: "weristes-716d0.firebaseapp.com",
+    databaseURL: "https://weristes-716d0-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "weristes-716d0",
+    storageBucket: "weristes-716d0.firebasestorage.app",
+    messagingSenderId: "1095166518480",
+    appId: "1:1095166518480:web:0915be52f9d650c6f52ad5"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // Funktionen exportieren, wenn du sie in anderen Dateien nutzen willst
+  window.database = database;
+  window.ref = ref;
+  window.set = set;
+  window.onValue = onValue;
+</script>
+
 
   <script>
     // Your Firebase configuration
