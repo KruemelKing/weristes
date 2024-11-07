@@ -11,15 +11,18 @@
   import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
   // Firebase-Konfiguration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBCVq6-A3-iyvyHTAETeHqx-lHRWHg_Cho",
-    authDomain: "weristes-716d0.firebaseapp.com",
-    databaseURL: "https://weristes-716d0-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "weristes-716d0",
-    storageBucket: "weristes-716d0.firebasestorage.app",
-    messagingSenderId: "1095166518480",
-    appId: "1:1095166518480:web:0915be52f9d650c6f52ad5"
-  };
+  require('dotenv').config();  // Lädt die .env-Datei
+
+const firebaseConfig = {
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: "weristes-716d0.firebaseapp.com",
+  databaseURL: "https://weristes-716d0-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "weristes-716d0",
+  storageBucket: "weristes-716d0.firebasestorage.app",
+  messagingSenderId: "1095166518480",
+  appId: "1:1095166518480:web:0915be52f9d650c6f52ad5"
+};
+
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
