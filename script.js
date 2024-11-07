@@ -1,24 +1,73 @@
-const characters = ["Max", "Anna", "Tom", "Lisa", "Lukas", "Sophie"]; // Liste der Charaktere
-let secretCharacter = null;
+// Firebase-Konfiguration
+const firebaseConfig = {
+  // Füge hier deine Firebase-Daten ein
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-// Funktion, um eine zufällige Karte zu ziehen
-function drawRandomCard() {
-  const randomIndex = Math.floor(Math.random() * characters.length);
-  secretCharacter = characters[randomIndex];
-  alert(`Geheimnisvolle Karte: ${secretCharacter}`); // Nur für den Test, später verstecken!
+let gameId = null;
+
+// Neues Spiel erstellen
+function createGame() {
+  gameId = Math.random().toString(36).substr(2, 5); // Erzeugt einen zufälligen Code
+  database.ref('games/' + gameId).set({
+    players: 1,
+    board: initializeBoard() // Das Board wird vorbereitet
+  });
+  loadGame();
+  alert(`Dein Spielcode ist: ${gameId}`);
 }
 
-// Karten dynamisch erstellen und ins Board einfügen
-const board = document.getElementById('board');
-characters.forEach((character, index) => {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.textContent = character;
-  card.onclick = () => flipCard(card);
-  board.appendChild(card);
-});
+// Spiel beitreten
+function joinGame() {
+  gameId = document.getElementById("joinCode").value;
+  database.ref('games/' + gameId).once('value').then(snapshot => {
+    if (snapshot.exists()) {
+      database.ref('games/' + gameId + '/players').set(2);
+      loadGame();
+    } else {
+      alert("Spiel nicht gefunden!");
+    }
+  });
+}
 
-// Funktion, um Karten umzudrehen
-function flipCard(card) {
-  card.classList.toggle('flipped');
+// Lade das Spielfeld
+function loadGame() {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("game").style.display = "block";
+  const boardDiv = document.getElementById('board');
+
+  database.ref('games/' + gameId + '/board').on('value', (snapshot) => {
+    const board = snapshot.val();
+    boardDiv.innerHTML = ''; // Löscht das Board und aktualisiert es
+
+    board.forEach((character, index) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.textContent = character;
+      card.onclick = () => flipCard(index);
+      boardDiv.appendChild(card);
+    });
+  });
+}
+
+// Initialisiere das Board
+function initializeBoard() {
+  return ["Max", "Anna", "Tom", "Lisa", "Lukas", "Sophie"];
+}
+
+// Karte umklappen
+function flipCard(index) {
+  database.ref(`games/${gameId}/board/${index}`).get().then((snapshot) => {
+    const currentState = snapshot.val();
+    const newState = currentState === "flipped" ? "hidden" : "flipped";
+    database.ref(`games/${gameId}/board/${index}`).set(newState);
+  });
+}
+
+// Spiel verlassen
+function leaveGame() {
+  document.getElementById("menu").style.display = "block";
+  document.getElementById("game").style.display = "none";
+  gameId = null;
 }
